@@ -22,6 +22,7 @@ public class Principal {
 	private JFrame frame;
 	private JTextField mediaMostrar;
 	private JLabel media;
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -34,9 +35,11 @@ public class Principal {
 			}
 		});
 	}
+	
 	public Principal() {
 		initialize();
 	}
+	
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
@@ -50,19 +53,15 @@ public class Principal {
 				File arq = null;
 				List<Float> dados = new ArrayList();
 				Float media = null;
-				Float mediana_par = null;
-				Float mediana_impar = null;
-				Float mediana = null;
-
 				
-				arq = escolherArquivo(arq);
+				arq = escolherArquivo(arq);				
 				lerArquivo(arq, dados);	
-				media = calcularMedia(dados);
-				mediana = calcularMediana(dados, mediana_par, mediana_impar);
 				
-				System.out.println(mediana_impar);
-				System.out.println(mediana_par);
-				System.out.println(mediana);
+				media = calcularMedia(dados);
+				Float mediana = calcularMediana(dados);
+				System.out.println(media);
+				
+				mediaMostrar.setText(String.valueOf(media));
 
 				
 
@@ -82,8 +81,10 @@ public class Principal {
 		frame.getContentPane().add(media);
 		
 	}
+	
 	public static File escolherArquivo(File arq){                                                      //importar arquivo do computador
         // importar dados numéricos de um arquivo .txt -> https://www.youtube.com/watch?v=YHV44ZVgab8&t=34s		
+		
 		JFileChooser chooser = new JFileChooser();			                                                                  //escolher arquivo: https://www.youtube.com/watch?v=1bE0vmWqd94
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Selecione um arquivo txt","txt");                                      //opcional: determinar o tipo de arquivo 
 		chooser.setFileFilter(filter);                                                                                                      //setar o filtro				
@@ -95,7 +96,9 @@ public class Principal {
 		
 		arq = chooser.getSelectedFile();
 		return arq;
+		
 	}
+	
 	public static List<Float> lerArquivo(File arq ,List<Float> dados){                                                      //importar arquivo do computador
 
 		String linha = new String();                                                                                 //vai receber o conjunto de dados em forma de texto-String
@@ -110,6 +113,7 @@ public class Principal {
 
 		return dados;
 }
+	
 	public static float calcularMedia(List<Float> dados) {		
 		float r = 0.0f;
 	    for (Float dado : dados) {
@@ -118,18 +122,19 @@ public class Principal {
 	    float media = r/dados.size();
 	    return media;
 	}
-	public static float calcularMediana(List<Float> dados, Float mediana_impar, Float mediana_par) {
+	
+	public static float calcularMediana(List<Float> dados) {
 	    Collections.sort(dados);
 	    int n = dados.size();		
 	    int p1 = n/2;
 	    if (n % 2 == 0) {                       //dados.size é um numero par		    	
 	    	int p2 = n/2+1;
 	    	Float mediana_0 = dados.get(p1-1) + dados.get(p2-1);	
-	    	mediana_par = mediana_0/2;
+	    	Float mediana_par = mediana_0/2;
 	    	return mediana_par;
 	    }
 	    else{                                    //dados.size é impar
-	    	mediana_impar = dados.get(p1);
+	    	Float mediana_impar = dados.get(p1);
 	    	return mediana_impar;
 	    }
 	}
