@@ -6,6 +6,9 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,11 +20,18 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.Font;
+import javax.swing.SwingConstants;
 
 public class Principal {
 	private JFrame frame;
 	private JTextField mediaMostrar;
 	private JLabel media;
+	private JTextField medianaMostrar;
+	private JTextField desvpadMostrar;
+	private JTextField arquivoMostrar2;
+	private JLabel textoSalvoEm;
+	private JTextField caminhoMostrar;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -42,7 +52,7 @@ public class Principal {
 	
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 536, 264);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -52,33 +62,93 @@ public class Principal {
 			public void actionPerformed(ActionEvent e) {
 				File arq = null;
 				List<Float> dados = new ArrayList();
-				Float media = null;
+				//Float media = null;
+				//Float desvpad = null;
 				
 				arq = escolherArquivo(arq);				
 				lerArquivo(arq, dados);	
-				
-				media = calcularMedia(dados);
+				//arquivoMostrar (JLabel) .setText(String.valueOf(arq));
+				arquivoMostrar2.setText(String.valueOf(arq));
+
+				Float media = calcularMedia(dados);
 				Float mediana = calcularMediana(dados);
-				System.out.println(media);
+				Float desvpad = calcularDesvioPadrao(dados, media);
 				
 				mediaMostrar.setText(String.valueOf(media));
-
-				
+				medianaMostrar.setText(String.valueOf(mediana));
+				desvpadMostrar.setText(String.valueOf(desvpad));
 
 			}
 		});
 			
-		botaoEscolherArquivo.setBounds(10, 10, 143, 34);
+		botaoEscolherArquivo.setBounds(27, 10, 167, 34);
 		frame.getContentPane().add(botaoEscolherArquivo);
 		
 		mediaMostrar = new JTextField();
-		mediaMostrar.setBounds(77, 54, 76, 19);
+		mediaMostrar.setBounds(118, 51, 76, 19);
 		frame.getContentPane().add(mediaMostrar);
 		mediaMostrar.setColumns(10);
 		
 		media = new JLabel("Média");
-		media.setBounds(30, 57, 34, 13);
+		media.setBounds(27, 55, 40, 13);
 		frame.getContentPane().add(media);
+		
+		JLabel mediana = new JLabel("Mediana");
+		mediana.setBounds(27, 79, 57, 13);
+		frame.getContentPane().add(mediana);
+		
+		medianaMostrar = new JTextField();
+		medianaMostrar.setColumns(10);
+		medianaMostrar.setBounds(118, 75, 76, 19);
+		frame.getContentPane().add(medianaMostrar);
+		
+		JLabel desvpad = new JLabel("Desvio Padrão");
+		desvpad.setBounds(27, 103, 98, 13);
+		frame.getContentPane().add(desvpad);
+		
+		desvpadMostrar = new JTextField();
+		desvpadMostrar.setColumns(10);
+		desvpadMostrar.setBounds(118, 99, 76, 19);
+		frame.getContentPane().add(desvpadMostrar);
+		
+		JLabel arquivo = new JLabel("Arquivo:");
+		arquivo.setBounds(204, 28, 46, 14);
+		frame.getContentPane().add(arquivo);
+		
+		arquivoMostrar2 = new JTextField();
+		arquivoMostrar2.setText("(nenhum arquivo selecionado)");
+		arquivoMostrar2.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		arquivoMostrar2.setBounds(255, 27, 255, 17);
+		frame.getContentPane().add(arquivoMostrar2);
+		arquivoMostrar2.setColumns(10);
+		
+		JButton botaoGerarRelatorio = new JButton("Gerar relatorio");
+		botaoGerarRelatorio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String caminho = null;
+				caminho = selecionarCaminho(caminho);
+				caminhoMostrar.setText(String.valueOf(caminho));
+				String media = mediaMostrar.getText();
+				String mediana = medianaMostrar.getText();
+				String desvpad = desvpadMostrar.getText();
+			
+				escreverArquivo(caminho, media, mediana, desvpad);
+				
+				
+			}
+		});
+		botaoGerarRelatorio.setBounds(27, 142, 167, 34);
+		frame.getContentPane().add(botaoGerarRelatorio);
+		
+		textoSalvoEm = new JLabel("Salvo em:");
+		textoSalvoEm.setBounds(27, 188, 57, 14);
+		frame.getContentPane().add(textoSalvoEm);
+		
+		caminhoMostrar = new JTextField();
+		caminhoMostrar.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		caminhoMostrar.setColumns(10);
+		caminhoMostrar.setBounds(91, 187, 255, 17);
+		frame.getContentPane().add(caminhoMostrar);
 		
 	}
 	
@@ -138,6 +208,52 @@ public class Principal {
 	    	return mediana_impar;
 	    }
 	}
+	
+	public static float calcularDesvioPadrao(List<Float> dados, float media) {
+	    float d = 0.0f;
+	    for (Float n : dados) {
+	    	d += Math.pow(n-media, 2);
+	    }
+	    float var = d/(dados.size()-1);
+	    float desvpad = (float) Math.sqrt(var);
+	    
+	    return desvpad;	   	    
+	}
+	
+	public static String selecionarCaminho(String caminho) {
+		// https://stackoverflow.com/questions/10083447/selecting-folder-destination-in-java
+		
+		JFileChooser chooser = new JFileChooser();	
+	   // chooser.setCurrentDirectory(new java.io.File("."));
+	    chooser.setDialogTitle("Salvar em ");
+	    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+	    chooser.setAcceptAllFileFilterUsed(false);	    	    
+	    		                                                                            
+	
+	  chooser.showOpenDialog(null);
+	  //if(retorno==JFileChooser.APPROVE_OPTION) {
+	  //JOptionPane.showMessageDialog(null, chooser.getSelectedFile().getAbsolutePath());}
+	  	
+	 				
+		
+		caminho = chooser.getSelectedFile().getAbsolutePath();
+		return caminho;	                                                                 		
+	}
 
+	public static void escreverArquivo(String caminho, String media, String mediana, String desvpad) {
+		// https://youtu.be/Kj5ibAHhv3M
+		
+		String nome = JOptionPane.showInputDialog("Insira o nome do arquivo txt");
+		String nome_txt = "\\"+nome+".txt";
+		
+		Path _caminho = Paths.get(caminho+nome_txt);
 
+		String texto = "A média dos valores é " + media + ". A mediana dos valores é " + mediana + ". O desvio padrão é " + desvpad + ".";
+		byte[] textoEmByte = texto.getBytes();	
+		try {
+		Files.write(_caminho, textoEmByte);
+		}catch(Exception erro) {}
+				
+	}
 }
+	
