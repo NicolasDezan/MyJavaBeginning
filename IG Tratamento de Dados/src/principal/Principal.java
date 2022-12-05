@@ -23,6 +23,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
+/*
+ * IG Tratamento de Dados v 2.1
+ * 04.12.2022
+ * 
+ * OBS: Intervalo de confiança em fase "Beta"
+ * 
+ * IFES Vila Velha
+ * Nícolas Dezan dos Santos
+ */
+
 public class Principal {
 	private JFrame frame;
 	private JTextField mediaMostrar;
@@ -32,6 +42,8 @@ public class Principal {
 	private JTextField arquivoMostrar2;
 	private JLabel textoSalvoEm;
 	private JTextField caminhoMostrar;
+	private JTextField icMostrar;
+	private JLabel aviso;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -62,22 +74,22 @@ public class Principal {
 			public void actionPerformed(ActionEvent e) {
 				File arq = null;
 				List<Float> dados = new ArrayList();
-				//Float media = null;
-				//Float desvpad = null;
 				
 				arq = escolherArquivo(arq);				
 				lerArquivo(arq, dados);	
-				//arquivoMostrar (JLabel) .setText(String.valueOf(arq));
+				
 				arquivoMostrar2.setText(String.valueOf(arq));
 
 				Float media = calcularMedia(dados);
 				Float mediana = calcularMediana(dados);
 				Float desvpad = calcularDesvioPadrao(dados, media);
+				Float ic = calcularIntervaloDeConfianca(dados, desvpad);
 				
-				mediaMostrar.setText(String.valueOf(media));
-				medianaMostrar.setText(String.valueOf(mediana));
-				desvpadMostrar.setText(String.valueOf(desvpad));
-
+				mediaMostrar.setText(String.valueOf(media).replace('.', ','));
+				medianaMostrar.setText(String.valueOf(mediana).replace('.', ','));
+				desvpadMostrar.setText(String.valueOf(desvpad).replace('.', ','));
+				icMostrar.setText(String.valueOf(ic).replace('.', ','));
+				
 			}
 		});
 			
@@ -150,6 +162,20 @@ public class Principal {
 		caminhoMostrar.setBounds(91, 187, 255, 17);
 		frame.getContentPane().add(caminhoMostrar);
 		
+		JLabel ic_texto = new JLabel("Intervalo de Confiança");
+		ic_texto.setBounds(204, 101, 142, 13);
+		frame.getContentPane().add(ic_texto);
+		
+		icMostrar = new JTextField();
+		icMostrar.setColumns(10);
+		icMostrar.setBounds(334, 99, 76, 19);
+		frame.getContentPane().add(icMostrar);
+		
+		aviso = new JLabel("T_Student - 95%");
+		aviso.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		aviso.setBounds(258, 115, 88, 13);
+		frame.getContentPane().add(aviso);
+		
 	}
 	
 	public static File escolherArquivo(File arq){                                                      //importar arquivo do computador
@@ -174,12 +200,20 @@ public class Principal {
 		String linha = new String();                                                                                 //vai receber o conjunto de dados em forma de texto-String
 		try {
 			FileReader leitorDeArquivo = new FileReader(arq);
-			BufferedReader buffer = new BufferedReader(leitorDeArquivo);   						
+			BufferedReader buffer = new BufferedReader(leitorDeArquivo);
+			
+			
 			while(true) {
 				linha = buffer.readLine();
+				linha = linha.replace(',', '.');               // Converte dados com "," para os tornar compatíveis com float
 				dados.add (Float.parseFloat(linha));
 				if(linha == null) {break;}
-				}}catch (Exception e){}			
+			}
+			
+		}catch (Exception e){
+			
+					
+		}			
 
 		return dados;
 }
@@ -248,12 +282,34 @@ public class Principal {
 		
 		Path _caminho = Paths.get(caminho+nome_txt);
 
-		String texto = "A média dos valores é " + media + ". A mediana dos valores é " + mediana + ". O desvio padrão é " + desvpad + ".";
+		String texto = 
+		"A média dos valores é " + media + ".\r\n"
+		+ "A mediana dos valores é " + mediana + ".\r\n"
+		+ "O desvio padrão é " + desvpad + ".\r\n";
+		
 		byte[] textoEmByte = texto.getBytes();	
 		try {
 		Files.write(_caminho, textoEmByte);
 		}catch(Exception erro) {}
 				
+	}
+	
+	public static Float calcularIntervaloDeConfianca(List<Float> dados, Float desvpad) {
+		/* Calcular intervalo de confiança
+		* Calculo de intervalo de confiança https://www.youtube.com/watch?v=j10HOYBXWrE
+		* t_table https://www.sjsu.edu/faculty/gerstman/StatPrimer/t-table.pdf
+		* 
+		*/ 
+		
+		Integer v = dados.size()-2;
+		
+		Float[] t_95 = new Float[24];
+			t_95[0] = 12.71f; t_95[1] = 4.303f; t_95[2] = 3.182f; t_95[3] = 2.776f; t_95[4] = 2.571f; t_95[5] = 2.447f; t_95[23]= 2.064f;
+					
+		Float ic = (float) (t_95[v] * desvpad/Math.sqrt(dados.size()));
+				
+		return ic;
+	
 	}
 }
 	
