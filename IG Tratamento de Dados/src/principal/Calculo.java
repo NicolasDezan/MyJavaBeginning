@@ -1,15 +1,16 @@
 package principal;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Calculo {
 	
-	public static Float somar(Float numeroSoma1, Float numeroSoma2){
-		Float resultado = numeroSoma1+numeroSoma2;		
-		return resultado;		
-	}
-	
+	public Calculo() {}
+		
 	public static float calcularMedia(List<Float> dados) {		
 		float r = 0.0f;
 	    for (Float dado : dados) {
@@ -54,7 +55,7 @@ public class Calculo {
 		*/ 
 		
 		Integer v = n_dados-2;
-		
+	
 		Float[] t_95 = new Float[29];
 			t_95[0] = 12.71f; 
 			t_95[1] = 4.303f; 
@@ -138,4 +139,30 @@ public class Calculo {
 	
 	}
 	
+	public static Float calcularIntervaloDeConfianca_X(Integer n_dados, Float desvpad) {
+		List<Float> score = new ArrayList<Float>();
+		
+		File inicial = new File(new java.io.File(".").getPath()+"\\score_int_confianca");
+		
+		File endereco = Arquivo.escolherArquivo(inicial);		
+		Integer v = n_dados-2;
+
+		String linha = new String();    
+		
+		try {
+			FileReader leitorDeArquivo = new FileReader(endereco);
+			BufferedReader buffer = new BufferedReader(leitorDeArquivo);
+						
+			while(true) {
+				linha = buffer.readLine();
+				linha.replace(',', '.');
+				score.add(Float.parseFloat(linha));
+				if(linha == null) break;
+			}			
+		}catch (Exception e){}	
+		
+		Float ic = (float) (score.get(v) * desvpad/Math.sqrt(n_dados));
+				
+		return ic;
+	}
 }

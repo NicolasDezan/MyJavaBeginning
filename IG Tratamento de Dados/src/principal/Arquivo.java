@@ -2,82 +2,75 @@ package principal;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Arquivo {
-	public static File escolherArquivo(File arq){                                                      //importar arquivo do computador
-        // importar dados numéricos de um arquivo .txt -> https://www.youtube.com/watch?v=YHV44ZVgab8&t=34s		
+	public Arquivo() {}
+	
+	//Abre procurador de arquivos e retorna um arquivo ou diretório selecionado (File) - Pode-se determinar um diretorio inicial para abrir o explorador de arquivos
+	public static File escolherArquivo(File f_diretorio_inicial){                                                      		
+		JFileChooser chooser = new JFileChooser();	
 		
-		JFileChooser chooser = new JFileChooser();			                                                                  //escolher arquivo: https://www.youtube.com/watch?v=1bE0vmWqd94
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Selecione um arquivo txt","txt");                                      //opcional: determinar o tipo de arquivo 
-		chooser.setFileFilter(filter);                                                                                                      //setar o filtro				
-		int retorno = chooser.showOpenDialog(null);                                                                             //mandando abrir a janela, o arquivo que for selecionado, irá para a variavel "retorno"
-
-		if(retorno==JFileChooser.APPROVE_OPTION) {
-			JOptionPane.showMessageDialog(null, chooser.getSelectedFile().getAbsolutePath());
+		FileNameExtensionFilter filtro = new FileNameExtensionFilter("Arquivos .txt", "txt");
+		chooser.setAcceptAllFileFilterUsed(false);
+		chooser.addChoosableFileFilter(filtro);
+		
+		chooser.setCurrentDirectory(f_diretorio_inicial);		
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		int retorno = chooser.showOpenDialog(chooser);
+		
+		if(retorno == JFileChooser.APPROVE_OPTION) {
+		File arq = chooser.getSelectedFile();				
+		return arq;	
 		}
-		
-		arq = chooser.getSelectedFile();
-		return arq;
+		else {			
+			return null;
+		}
 		
 	}
 	
-	public static List<Float> lerArquivo(File arq ,List<Float> dados){             
-		// Recebe arquivo .txt (File) e retorna uma lista de dados
-
-		String linha = new String();                                                                                 //vai receber o conjunto de dados em forma de texto-String
+	// Recebe arquivo .txt (File) e retorna uma lista String
+	public static List<String> lerArquivo(File arq){             
+		List<String> arquivo_lido = new ArrayList<String>();
+		String linha = new String(); 
+		
+				
+		
 		try {
 			FileReader leitorDeArquivo = new FileReader(arq);
 			BufferedReader buffer = new BufferedReader(leitorDeArquivo);
-			
-			
+						
 			while(true) {
 				linha = buffer.readLine();
-				linha = linha.replace(',', '.');               // Converte dados com "," para os tornar compatíveis com float
-				dados.add (Float.parseFloat(linha));
-				if(linha == null) {break;}
+				arquivo_lido.add (linha);
+				if(linha == null) break;
 			}
 			
-		}catch (Exception e){
-			
-					
-		}			
+		}catch (Exception e){}	
+		
+		arquivo_lido.remove(arquivo_lido.size()-1);
 
-		return dados;
+		return arquivo_lido;
 }
 	
-	public static void escreverArquivo(String texto, Path _caminho) {
+	
+	public static void escreverArquivo(String texto, File _caminho) {
 		// https://youtu.be/Kj5ibAHhv3M
-				
+		Path p_caminho = _caminho.toPath();						
+		
 		byte[] textoEmByte = texto.getBytes();	
 		try {
-		Files.write(_caminho, textoEmByte);
+		Files.write(p_caminho, textoEmByte);
 		}catch(Exception erro) {}
 				
-	}
-	
-	public static String selecionarCaminho() {
-		// https://stackoverflow.com/questions/10083447/selecting-folder-destination-in-java
-		
-		JFileChooser chooser = new JFileChooser();	
-	    chooser.setDialogTitle("Salvar em ");
-	    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-	    chooser.setAcceptAllFileFilterUsed(false);	    	    	    		                                                                            
-	
-	  chooser.showOpenDialog(null);	 				
-		String nome = JOptionPane.showInputDialog("Insira o nome do arquivo txt");
-		//String nome_txt = 
-		String caminho = chooser.getSelectedFile().getAbsolutePath()+"\\"+nome+".txt";;
-		
-		
-		return caminho;	                                                                 		
 	}
 	
 }
