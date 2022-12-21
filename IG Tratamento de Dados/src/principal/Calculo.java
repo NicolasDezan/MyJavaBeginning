@@ -139,12 +139,9 @@ public class Calculo {
 	
 	}
 	
-	public static Float calcularIntervaloDeConfianca_X(Integer n_dados, Float desvpad) {
-		List<Float> score = new ArrayList<Float>();
+	public static Float calcularIntervaloDeConfianca_X(Integer n_dados, Float desvpad, File endereco) {
+		List<Float> score = new ArrayList<Float>();		
 		
-		File inicial = new File(new java.io.File(".").getPath()+"\\score_int_confianca");
-		
-		File endereco = Arquivo.escolherArquivo(inicial);		
 		Integer v = n_dados-2;
 
 		String linha = new String();    

@@ -15,7 +15,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Arquivo {
 	public Arquivo() {}
 	
-	//Abre procurador de arquivos e retorna um arquivo ou diretório selecionado (File) - Pode-se determinar um diretorio inicial para abrir o explorador de arquivos
+	//Abre procurador de arquivos e retorna um arquivo selecionado (File) - Pode-se determinar um diretorio inicial para abrir o explorador de arquivos
 	public static File escolherArquivo(File f_diretorio_inicial){                                                      		
 		JFileChooser chooser = new JFileChooser();	
 		
@@ -25,6 +25,27 @@ public class Arquivo {
 		
 		chooser.setCurrentDirectory(f_diretorio_inicial);		
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		int retorno = chooser.showOpenDialog(chooser);
+		
+		if(retorno == JFileChooser.APPROVE_OPTION) {
+		File arq = chooser.getSelectedFile();				
+		return arq;	
+		}
+		else {			
+			return null;
+		}
+		
+	}
+	
+	//Retorna um diretorio escolhido por JChooser
+	public static File escolherDiretorio(){                                                      		
+		JFileChooser chooser = new JFileChooser();	
+		
+		//FileNameExtensionFilter filtro = new FileNameExtensionFilter("Selecionar diretório", "");
+		chooser.setAcceptAllFileFilterUsed(false);
+		//chooser.addChoosableFileFilter(filtro);
+				
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		int retorno = chooser.showOpenDialog(chooser);
 		
 		if(retorno == JFileChooser.APPROVE_OPTION) {
