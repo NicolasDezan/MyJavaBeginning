@@ -1,5 +1,5 @@
 /*
- * IG Tratamento de Dados v 3.1
+ * IG Tratamento de Dados v 3.2
  * 22.12.2022
  * 
  * IFES Vila Velha
@@ -468,7 +468,7 @@ public class Principal {
 		
 		botaoMenuAjudaSobre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			    JOptionPane.showMessageDialog(null, ">IG Tratamento de Dados v 3.1 \r\n>22.12.2022 \r\n>By: Nícolas Dezan dos Santos \r\n>IFES Vila Velha - Brazil");				    				
+			    JOptionPane.showMessageDialog(null, ">IG Tratamento de Dados v 3.2 \r\n>22.12.2022 \r\n>By: Nícolas Dezan dos Santos \r\n>IFES Vila Velha - Brazil");				    				
 			}
 		});
 		
