@@ -148,13 +148,12 @@ public class Calculo {
 		
 		try {
 			FileReader leitorDeArquivo = new FileReader(endereco);
-			BufferedReader buffer = new BufferedReader(leitorDeArquivo);
-						
-			while(true) {
-				linha = buffer.readLine();
-				linha.replace(',', '.');
-				score.add(Float.parseFloat(linha));
-				if(linha == null) break;
+			try (BufferedReader buffer = new BufferedReader(leitorDeArquivo)) {
+				while(true) {
+					linha = buffer.readLine();
+					linha.replace(',', '.');
+					score.add(Float.parseFloat(linha));
+				}
 			}			
 		}catch (Exception e){}	
 		

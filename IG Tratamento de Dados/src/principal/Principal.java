@@ -217,7 +217,7 @@ public class Principal {
 			
 			String s_prefDiretorioDados = null;			
 			try {
-				File diretorioPref = new File(new java.io.File(".").getPath()+"\\.config\\config.txt");
+				File diretorioPref = new File(new java.io.File(".").getPath()+"\\config\\config.txt");
 				List<String> pref = Arquivo.lerArquivo(diretorioPref);	
 					s_prefDiretorioDados = new File(pref.get(1)).getPath();
 				}catch(Exception semConfig) {}		
@@ -291,7 +291,7 @@ public class Principal {
 						String s_prefDiretorioRelatorio = null;
 						
 						try {
-							File diretorioPref = new File(new java.io.File(".").getPath()+"\\.config\\config.txt");
+							File diretorioPref = new File(new java.io.File(".").getPath()+"\\config\\config.txt");
 							List<String> pref = Arquivo.lerArquivo(diretorioPref);	
 								s_prefDiretorioRelatorio = new File(pref.get(2)).getPath();			
 							}catch(Exception semConfig) {}		

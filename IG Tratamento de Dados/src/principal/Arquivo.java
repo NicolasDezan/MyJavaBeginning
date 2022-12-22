@@ -2,7 +2,6 @@ package principal;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -67,12 +66,12 @@ public class Arquivo {
 		
 		try {
 			FileReader leitorDeArquivo = new FileReader(arq);
-			BufferedReader buffer = new BufferedReader(leitorDeArquivo);
-						
-			while(true) {
-				linha = buffer.readLine();
-				arquivo_lido.add (linha);
-				if(linha == null) break;
+			try (BufferedReader buffer = new BufferedReader(leitorDeArquivo)) {
+				while(true) {
+					linha = buffer.readLine();
+					arquivo_lido.add (linha);
+					if(linha == null) break;
+				}
 			}
 			
 		}catch (Exception e){}	

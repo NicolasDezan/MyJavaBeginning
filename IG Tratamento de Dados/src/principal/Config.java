@@ -12,7 +12,7 @@ public class Config {
 	public static Integer idioma() {
 		Integer linguagemAtual = 1;
 		try {
-			File diretorioPref = new File(new java.io.File(".").getPath()+"\\.config\\config.txt");
+			File diretorioPref = new File(new java.io.File(".").getPath()+"\\config\\config.txt");
 			List<String> pref = Arquivo.lerArquivo(diretorioPref);
 			linguagemAtual = Integer.valueOf(pref.get(0));		
 			}catch(Exception semConfig) {}	
@@ -24,7 +24,7 @@ public class Config {
 	public static Integer janelaInicial() {
 		Integer janelaInicial = 1;
 		try {
-			File diretorioPref = new File(new java.io.File(".").getPath()+"\\.config\\config.txt");
+			File diretorioPref = new File(new java.io.File(".").getPath()+"\\config\\config.txt");
 			List<String> pref = Arquivo.lerArquivo(diretorioPref);
 			janelaInicial = Integer.valueOf(pref.get(3));		
 			}catch(Exception semConfig) {}	

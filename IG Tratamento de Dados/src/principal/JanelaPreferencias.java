@@ -44,7 +44,7 @@ public class JanelaPreferencias extends JFrame {
 		String s_prefDiretorioDados = null;
 		String s_prefDiretorioRelatorio = null;		
 		try {
-			File diretorioPref = new File(new java.io.File(".").getPath()+"\\.config\\config.txt");
+			File diretorioPref = new File(new java.io.File(".").getPath()+"\\config\\config.txt");
 			List<String> pref = Arquivo.lerArquivo(diretorioPref);
 				linguagemAtual = Integer.valueOf(pref.get(0));
 				s_prefDiretorioDados = new File(pref.get(1)).getPath();
@@ -144,7 +144,7 @@ public class JanelaPreferencias extends JFrame {
 		
 		botaoAplicar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File config = new File(new java.io.File(".").getPath()+"\\.config\\config.txt");
+				File config = new File(new java.io.File(".").getPath()+"\\config\\config.txt");
 				int linguagemAtual = Config.idioma();				
 				
 				// PT = 1 ___ EN = 2

@@ -6,8 +6,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextPane;
-import javax.swing.JScrollBar;
-import javax.swing.DropMode;
 
 public class JanelaFuncoes extends JFrame {
 
