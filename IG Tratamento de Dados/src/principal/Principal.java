@@ -1,14 +1,12 @@
 /*
- * IG Tratamento de Dados v 3.0
- * 21.12.2022
+ * IG Tratamento de Dados v 3.1
+ * 22.12.2022
  * 
  * IFES Vila Velha
  * Nícolas Dezan dos Santos
  * 
  * Melhorias que podem ser feitas: 
  * 1) Refinar a interface e o relatório gerado para "outros" valores de t-student
- * 2) Adicionar interface de boas vindas: apresentar o programa e suas funcionalidades
- * 2.1) Permitir que o usuário escolha se quer ver ou não as boas vindas sempre que abrir o programa
  * 
  */
 
@@ -18,12 +16,9 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -31,6 +26,7 @@ import java.awt.Font;
 import javax.swing.JRadioButton;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -56,6 +52,8 @@ public class Principal {
 				try {
 					Principal window = new Principal();
 					window.frmTratamentoDeDados.setVisible(true);
+					window.frmTratamentoDeDados.setLocationRelativeTo(null);
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -125,7 +123,7 @@ public class Principal {
 	frmTratamentoDeDados.getContentPane().add(texto_arquivo);	
 	arquivoMostrar2 = new JTextField();
 	arquivoMostrar2.setEditable(false);
-	arquivoMostrar2.setBounds(61, 11, 315, 17);
+	arquivoMostrar2.setBounds(61, 11, 373, 17);
 	arquivoMostrar2.setText("(nenhum arquivo selecionado)");
 	arquivoMostrar2.setFont(new Font("Tahoma", Font.PLAIN, 11));
 	frmTratamentoDeDados.getContentPane().add(arquivoMostrar2);
@@ -134,7 +132,7 @@ public class Principal {
 	selecionar_X.setFont(new Font("Tahoma", Font.PLAIN, 10));
 	caminhoMostrar = new JTextField();
 	caminhoMostrar.setEditable(false);
-	caminhoMostrar.setBounds(74, 157, 285, 17);
+	caminhoMostrar.setBounds(74, 157, 360, 17);
 	caminhoMostrar.setFont(new Font("Tahoma", Font.PLAIN, 11));
 	caminhoMostrar.setColumns(10);
 	frmTratamentoDeDados.getContentPane().add(caminhoMostrar);
@@ -170,6 +168,15 @@ public class Principal {
 	botaoMenuPref.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
 	menuOpcoes.add(botaoMenuPref);
 	
+	JMenu botaoMenuAjuda = new JMenu("Ajuda");
+	menuBar.add(botaoMenuAjuda);
+	
+	JMenuItem botaoMenuAjudaFuncoes = new JMenuItem("Funções do programa");
+	botaoMenuAjuda.add(botaoMenuAjudaFuncoes);	
+	JMenuItem botaoMenuAjudaSobre = new JMenuItem("Sobre o programa");
+
+	botaoMenuAjuda.add(botaoMenuAjudaSobre);
+	
 	// aff ta em ingles
 	if(linguagemAtual == 2) {
 		botaoMenuPref.setText("Preferences");
@@ -187,7 +194,22 @@ public class Principal {
 		textoSalvoEm.setText("Saved in");
 		txtSelecionarNivel.setText("Select confidence level");
 		selecionar_X.setText("Other");
+		botaoMenuAjuda.setText("Help");
+		botaoMenuAjudaFuncoes.setText("Program functions");
+		botaoMenuAjudaSobre.setText("About the program");
+		
 	}
+	
+	
+	int abrirJanelaFuncoes = Config.janelaInicial();
+	if(abrirJanelaFuncoes == 1) {
+		JanelaFuncoes funcoes = new JanelaFuncoes();				
+		funcoes.setLocationRelativeTo(null);
+		funcoes.setVisible(true);
+		funcoes.setResizable(false);
+		funcoes.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);		
+	}
+	
 	
 	
 		botaoMenuSelecionarArquivo.addActionListener(new ActionListener() {
@@ -429,7 +451,26 @@ public class Principal {
 			}
 		});
 		
+		botaoMenuAjudaFuncoes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				JanelaFuncoes preferencias = new JanelaFuncoes();				
+				preferencias.setLocationRelativeTo(null);
+				preferencias.setVisible(true);
+				preferencias.setResizable(false);
+				preferencias.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				
+				
+			}
+			
+			
+			
+		});
 		
+		botaoMenuAjudaSobre.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			    JOptionPane.showMessageDialog(null, ">IG Tratamento de Dados v 3.1 \r\n>22.12.2022 \r\n>By: Nícolas Dezan dos Santos \r\n>IFES Vila Velha - Brazil");				    				
+			}
+		});
 		
 		
 	}

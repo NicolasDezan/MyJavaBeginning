@@ -57,7 +57,7 @@ public class JanelaPreferencias extends JFrame {
 		diretorioRelatorio.setEditable(false);
 		setTitle("Preferências");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 369, 199);
+		setBounds(100, 100, 369, 262);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		botaoSelecionarEscolher.setBounds(246, 27, 97, 23);
@@ -77,7 +77,7 @@ public class JanelaPreferencias extends JFrame {
 		contentPane.add(txtRelatorio);		
 		JCheckBox linguaEN = new JCheckBox("English");
 
-		linguaEN.setBounds(10, 130, 97, 23);
+		linguaEN.setBounds(10, 189, 97, 23);
 		contentPane.add(linguaEN);		
 		JCheckBox linguaPT = new JCheckBox("Português");
 		
@@ -86,13 +86,13 @@ public class JanelaPreferencias extends JFrame {
 		if(linguagemAtual == 2) {
 		linguaEN.setSelected(true);}
 		
-		linguaPT.setBounds(10, 104, 97, 23);
+		linguaPT.setBounds(10, 163, 97, 23);
 		
 		
 		contentPane.add(linguaPT);		
 		JButton botaoAplicar = new JButton("Aplicar");
 		botaoAplicar.setFont(botaoAplicar.getFont().deriveFont(botaoAplicar.getFont().getStyle() | Font.BOLD));
-		botaoAplicar.setBounds(244, 130, 89, 23);
+		botaoAplicar.setBounds(254, 189, 89, 23);
 		contentPane.add(botaoAplicar);		
 		diretorioEscolha2 = new JTextField();
 		diretorioEscolha2.setEditable(false);
@@ -103,6 +103,14 @@ public class JanelaPreferencias extends JFrame {
 		diretorioEscolha2.setText(s_prefDiretorioDados);
 		diretorioRelatorio.setText(s_prefDiretorioRelatorio);
 		
+		JLabel labelIdioma = new JLabel("Idioma");
+		labelIdioma.setBounds(10, 147, 72, 14);
+		contentPane.add(labelIdioma);
+		
+		JCheckBox botaoDesabilitar = new JCheckBox("Desabilitar mensagem inicial");
+		botaoDesabilitar.setBounds(10, 115, 268, 23);
+		contentPane.add(botaoDesabilitar);
+		
 		if(linguagemAtual==2) {
 			botaoSelecionarEscolher.setText("Select");
 			botaoSelecionarRelatorio.setText("Select");
@@ -110,7 +118,13 @@ public class JanelaPreferencias extends JFrame {
 			txtEscolher.setText("Default directory to choose files");
 			txtRelatorio.setText("Default directory to save reports");
 			botaoAplicar.setText("Apply");
-			
+			labelIdioma.setText("Language");
+			botaoDesabilitar.setText("Disable splash message");
+		}
+		
+		int abrirJanelaFuncoes = Config.janelaInicial();
+		if(abrirJanelaFuncoes == 2) {
+				botaoDesabilitar.setSelected(true);
 		}
 		
 		botaoSelecionarEscolher.addActionListener(new ActionListener() {
@@ -142,11 +156,18 @@ public class JanelaPreferencias extends JFrame {
 					linguagem = 2; 
 					}	
 				
+				String msgInicial = "1";
+				 if(botaoDesabilitar.isSelected()) {
+					 msgInicial = "2";
+				 }
+				
 					
 				String novaConfig = 
 						linguagem + "\r\n"
 						+ diretorioEscolha2.getText() + "\r\n"
-						+ diretorioRelatorio.getText();			
+						+ diretorioRelatorio.getText() + "\r\n"
+						+ msgInicial;
+						;			
 				
 				try {
 				Arquivo.escreverArquivo(novaConfig, config);
