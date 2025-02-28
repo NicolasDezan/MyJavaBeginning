@@ -27,4 +27,4 @@ Este projeto foi criado como parte do meu aprendizado inicial em programação. 
 
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/seu-usuario/tratamento-de-dados.git
+   git clone https://github.com/NicolasDezan/MyJavaBeginning.git
